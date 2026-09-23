@@ -1,46 +1,14 @@
-import { useEffect, useState } from 'react';
-import WelcomeMessage from './WelcomeMessage';
+
+import DashboardLayout from './components/layout/DashboardLayout.jsx';
+import Dashboard from './pages/Dashboard.jsx'
 
 function App() {
-  const [message, setMessage] = useState('');
-  const [loading, setLoading] = useState(true);
-  const [status, setStatus] = useState('');
 
-  useEffect(() => {
-    async function checkBackend() {
-      try {
-        const response = await fetch(
-          'http://localhost:5000/api/health'
-        );
-
-        const data = await response.json();
-
-        setMessage(data.message);
-        setStatus('Backend Status: Connected')
-      } catch (error) {
-        console.error('API request failed:', error);
-        setMessage('Backend connection failed');
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    checkBackend();
-  }, []);
 
   return (
-    <div>
-      <h1>WorkSphere</h1>
-
-      {loading ? (
-        <p>Checking backend...</p>
-      ) : (
-        <p>{message}</p>
-      )}
-
-      <h3>{status}</h3>
-      <WelcomeMessage />
-    </div>
+    <DashboardLayout>
+     <Dashboard/>
+    </DashboardLayout>
   );
 }
 
