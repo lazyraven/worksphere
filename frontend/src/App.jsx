@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
+import WelcomeMessage from './WelcomeMessage';
 
 function App() {
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState('');
 
   useEffect(() => {
     async function checkBackend() {
@@ -14,6 +16,7 @@ function App() {
         const data = await response.json();
 
         setMessage(data.message);
+        setStatus('Backend Status: Connected')
       } catch (error) {
         console.error('API request failed:', error);
         setMessage('Backend connection failed');
@@ -34,6 +37,9 @@ function App() {
       ) : (
         <p>{message}</p>
       )}
+
+      <h3>{status}</h3>
+      <WelcomeMessage />
     </div>
   );
 }
