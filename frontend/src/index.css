@@ -89,6 +89,18 @@ section {
   margin-top: 20px;
 }
 
+.nav-link {
+  padding: 10px;
+  text-decoration: none;
+  color: #333;
+  border-radius: 6px;
+}
+
+.nav-link.active {
+  background: #e8e8e8;
+  font-weight: bold;
+}
+
 @media (max-width: 900px) {
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);

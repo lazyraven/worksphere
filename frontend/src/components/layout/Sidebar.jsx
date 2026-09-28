@@ -1,14 +1,39 @@
-import {useState} from 'react'
+// import { useState } from 'react';
+import {NavLink} from 'react-router-dom';
+
+// const menuItems = [
+//     'Dashboard',
+//     'Projects',
+//     'Tasks',
+//     'Analytics',
+//     'Settings'
+// ]
+
 const menuItems = [
-    'Dashboard',
-    'Projects',
-    'Tasks',
-    'Analytics',
-    'Settings'
-]
+    {
+        label: 'Dashboard',
+        path: '/dashboard'
+    },
+    {
+        label: 'Projects',
+        path: '/projects'
+    },
+    {
+        label: 'Tasks',
+        path: '/tasks'
+    },
+    {
+        label: 'Analytics',
+        path: '/analytics'
+    },
+    {
+        label: 'Settings',
+        path: '/settings'
+    }
+];
 
 function Sidebar() {
-const [activeItem, setActiveItem] = useState('Dashboard')
+    // const [activeItem, setActiveItem] = useState('Dashboard')
 
     return (
         <aside className="sidebar">
@@ -16,28 +41,35 @@ const [activeItem, setActiveItem] = useState('Dashboard')
             <nav>
                 {/* this should be return - i mistake here take small bractets in map so that it'll take return */}
                 {menuItems.map((item) => (
-                    <button key={item}
-                    onClick={()=>setActiveItem(item)}
+                    <NavLink key={item.path}
+                        to={item.path}
+                        className={({isActive})=>isActive ? 'nav-link active' : 'nav-link'}
                     >
-                        {item}
-                    </button>
+                        {item.label}
+                    </NavLink>
+
+                    // <button key={item}
+                    // onClick={()=>setActiveItem(item)}
+                    // >
+                    //     {item}
+                    // </button>
                 ))
                 }
             </nav>
-            <p>selected: {activeItem}</p>
+            {/* <p>selected: {activeItem}</p>
 
-            {activeItem ==='Dashboard' && (
+            {activeItem === 'Dashboard' && (
                 <p>Viewing your dashboard</p>
             )}
 
-            {activeItem ==='Projects' && (
+            {activeItem === 'Projects' && (
                 <p>You are viewing projects.</p>
             )}
 
-            {activeItem === 'Tasks' &&(
+            {activeItem === 'Tasks' && (
                 <p>You are viewing tasks.</p>
             )
-            }
+            } */}
         </aside>
     )
 }
