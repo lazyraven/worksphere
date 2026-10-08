@@ -8,6 +8,7 @@ import Analytics from './pages/Analytics.jsx';
 import Settings from './pages/Settings.jsx';
 import NotFound from './pages/NotFound.jsx';
 import ProjectDetails from './pages/ProjectDetails.jsx';
+import Reports from './pages/Reports.jsx'
 
 function App() {
   return (
@@ -22,10 +23,11 @@ function App() {
         <Route path='/analytics' element={<Analytics />} />
         <Route path='/settings' element={<Settings />} />
         <Route path='/analytics' element={<Projects />} />
+        <Route path='/reports' element={<Reports/>}/>
+      </Route>
         <Route path='/' element={<Navigate to='/dashboard' replace />} />
         <Route path='*' element={<NotFound />} />
         <Route path='/projects/:projectId' element={<ProjectDetails/>}/>
-      </Route>
     </Routes>
 
   );

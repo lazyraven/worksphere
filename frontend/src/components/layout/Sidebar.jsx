@@ -29,6 +29,10 @@ const menuItems = [
     {
         label: 'Settings',
         path: '/settings'
+    },
+    {
+        label: 'Reports',
+        path: '/reports'
     }
 ];
 
