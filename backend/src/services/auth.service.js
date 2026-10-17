@@ -31,3 +31,36 @@ export async function registerUser({ name, email, password }) {
     }
   };
 }
+
+export async function loginUser({ email, password }) {
+  const user = await User.findOne({ email }).select('+password');
+
+  if (!user) {
+    const error = new Error('Invalid email or password');
+    error.statusCode = 401;
+    throw error;
+  }
+
+  const isPasswordValid = await bcrypt.compare(
+    password,
+    user.password
+  );
+
+  if (!isPasswordValid) {
+    const error = new Error('Invalid email or password');
+    error.statusCode = 401;
+    throw error;
+  }
+
+  const token = generateToken(user._id.toString());
+
+  return {
+    token,
+    user: {
+      id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role
+    }
+  };
+}
