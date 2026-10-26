@@ -8,7 +8,9 @@ import Analytics from './pages/Analytics.jsx';
 import Settings from './pages/Settings.jsx';
 import NotFound from './pages/NotFound.jsx';
 import ProjectDetails from './pages/ProjectDetails.jsx';
-import Reports from './pages/Reports.jsx'
+import Reports from './pages/Reports.jsx';
+import Login from './pages/Login.jsx';
+import Register from './pages/Register.jsx'
 
 function App() {
   return (
@@ -24,6 +26,9 @@ function App() {
         <Route path='/settings' element={<Settings />} />
         <Route path='/analytics' element={<Projects />} />
         <Route path='/reports' element={<Reports/>}/>
+
+        <Route path='/login' element={<Login/>}/>
+        <Route path='/register' element={<Register/>}/>
       </Route>
         <Route path='/' element={<Navigate to='/dashboard' replace />} />
         <Route path='*' element={<NotFound />} />
