@@ -1,19 +1,36 @@
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
+
 function Navbar() {
-    return (
-        <div>
-            <header className="navbar">
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
-                <div className="navbar-logo">
+  function handleLogout() {
+    localStorage.removeItem('token');
+    logout();
+    navigate('/login');
+  }
 
-                </div>
-                <div className="navbar-action">
-                    <button>🔔</button>
-                    <div className="user-menu">
-                        Nisha ▼
-                    </div>
-                </div>
-            </header>
-        </div>
-    )
+  return (
+    <header className="navbar">
+
+      <div className="navbar-logo">
+        WorkSphere
+      </div>
+
+      <div className="navbar-actions">
+        <span>
+          {user?.name}
+        </span>
+
+        <button onClick={handleLogout}>
+          Logout
+        </button>
+
+      </div>
+
+    </header>
+  );
 }
-export default Navbar
+
+export default Navbar;
