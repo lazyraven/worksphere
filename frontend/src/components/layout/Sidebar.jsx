@@ -33,6 +33,14 @@ const menuItems = [
     {
         label: 'Reports',
         path: '/reports'
+    },
+    {
+        label: 'Login',
+        path: '/login'
+    },
+    {
+        label: 'Register',
+        path: '/register'
     }
 ];
 

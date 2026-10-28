@@ -8,26 +8,33 @@ import Analytics from './pages/Analytics.jsx';
 import Settings from './pages/Settings.jsx';
 import NotFound from './pages/NotFound.jsx';
 import ProjectDetails from './pages/ProjectDetails.jsx';
-import Reports from './pages/Reports.jsx'
+import Reports from './pages/Reports.jsx';
+import Register from './pages/Register.jsx';
+import Login from './pages/Login.jsx'
+import ProtectedRoute from './components/auth/ProtectedRoute.jsx';
 
 function App() {
   return (
-
     <Routes>
-      <Route element={<DashboardLayout />}>
-        <Route
-          path='/dashboard'
-          element={<Dashboard />} />
-        <Route path='/projects' element={<Projects />} />
-        <Route path='/tasks' element={<Tasks />} />
-        <Route path='/analytics' element={<Analytics />} />
-        <Route path='/settings' element={<Settings />} />
-        <Route path='/analytics' element={<Projects />} />
-        <Route path='/reports' element={<Reports/>}/>
+        <Route element={<DashboardLayout />}>
+      <Route element={<ProtectedRoute />}>
+          <Route
+            path='/dashboard'
+            element={<Dashboard />} />
+          <Route path='/projects' element={<Projects />} />
+          <Route path='/tasks' element={<Tasks />} />
+          <Route path='/analytics' element={<Analytics />} />
+          <Route path='/settings' element={<Settings />} />
+          <Route path='/analytics' element={<Projects />} />
+          <Route path='/reports' element={<Reports />} />
+        </Route>
+          <Route path='/login' element={<Login />} />
+          <Route path='/register' element={<Register />} />
       </Route>
-        <Route path='/' element={<Navigate to='/dashboard' replace />} />
-        <Route path='*' element={<NotFound />} />
-        <Route path='/projects/:projectId' element={<ProjectDetails/>}/>
+
+      <Route path='/' element={<Navigate to='/dashboard' replace />} />
+      <Route path='*' element={<NotFound />} />
+      <Route path='/projects/:projectId' element={<ProjectDetails />} />
     </Routes>
 
   );
