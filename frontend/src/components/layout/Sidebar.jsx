@@ -35,6 +35,10 @@ const menuItems = [
         path: '/reports'
     },
     {
+        label: 'Profile',
+        path: '/profile'
+    },
+    {
         label: 'Login',
         path: '/login'
     },
