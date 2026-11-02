@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { apiRequest } from '../services/api.js'
-import  FormField  from '../components/forms/FormField.jsx'
+import FormField from '../components/forms/FormField.jsx'
 
 function Profile() {
     const [profile, setProfile] = useState(null);
@@ -8,6 +8,9 @@ function Profile() {
         name: '',
         avatar: ''
     })
+    const [saving, setSaving] = useState(false);
+    const [success, setSuccess] = useState('');
+
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
@@ -16,7 +19,7 @@ function Profile() {
             try {
                 const response = await apiRequest('/profile/me')
                 const user = response.data.user;
-                setProfile(user)
+                setProfile(user);
 
                 setFormData({
                     name: user.name || '',
@@ -31,6 +34,31 @@ function Profile() {
         fetchProfile();
     }, [])
 
+    async function handleSubmit(event) {
+        event.preventDefault();
+        setSaving(true);
+        setError('');
+        setSuccess('');
+        try {
+            const response = await apiRequest('/profile/me', {
+                method: 'PATCH',
+                body: JSON.stringify(formData)
+            });
+
+            const updatedUser = response.data.user;
+            setProfile(updatedUser);
+            setFormData({
+                name: updatedUser.name || '',
+                avatar: updatedUser.avatar || ''
+            })
+
+            setSuccess('Profile updated successfully!');
+        } catch (error) {
+            setError(error.message);
+        } finally {
+            setSaving(false);
+        }
+    }
     const handleChange = (event) => {
         const { name, value } = event.target;
         setFormData((prev) => ({
@@ -55,7 +83,7 @@ function Profile() {
             <h1>My Profile</h1>
             <p>Manage your personal information.</p>
 
-            <form className="profile-form">
+            <form className="profile-form" onSubmit={handleSubmit}>
                 <FormField
                     id="profile-name"
                     name="name"
@@ -92,7 +120,13 @@ function Profile() {
                     placeholder="Enter avatar URL"
                 ></FormField>
 
-                <button type='button'>Save Changes</button>
+                {error && <p className='error-message'>{error}</p>}
+                {success && <p className='success-message'>{success}</p>}
+
+                <button type='submit' disabled={saving} >
+                    {saving ? 'Saving...' : "Save Changes"}
+                </button>
+
             </form>
 
             <div className="profile-card">
