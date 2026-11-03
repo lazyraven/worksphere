@@ -12,6 +12,7 @@ import Reports from './pages/Reports.jsx';
 import Register from './pages/Register.jsx';
 import Login from './pages/Login.jsx'
 import ProtectedRoute from './components/auth/ProtectedRoute.jsx';
+import Profile from './pages/Profile.jsx';
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
           <Route path='/settings' element={<Settings />} />
           <Route path='/analytics' element={<Projects />} />
           <Route path='/reports' element={<Reports />} />
+          <Route path='/profile' element={<Profile />} />
         </Route>
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
