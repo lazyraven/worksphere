@@ -37,17 +37,33 @@ function Profile() {
         fetchProfile();
     }, [])
 
+    const hasChange = profile && (
+        formData.name.trim() !== (profile.name || '') ||
+        formData.avatar.trim() !== (profile.avatar || '')
+    )
+
     async function handleSubmit(event) {
         event.preventDefault();
-        const errors = validateProfile(formData);
-        setValidationErrors(errors);
 
-        setSaving(true);
+    // Step 1: Validate before API request
+        const payload = {
+            name: formData.name.trim(),
+            avatar: formData.avatar.trim()
+        }
+        const errors = validateProfile(payload);
+        setValidationErrors(errors);
         setError('');
         setSuccess('');
+
+    // Step 2: Stop if validation fails
         if (Object.keys(errors).length > 0) {
             return;
         }
+        if(!hasChange || saving){
+            return
+        }
+    // Step 3: Call API only when validation passes
+        setSaving(true);
         try {
             const response = await apiRequest('/profile/me', {
                 method: 'PATCH',
@@ -68,6 +84,7 @@ function Profile() {
             setSaving(false);
         }
     }
+
     const handleChange = (event) => {
         const { name, value } = event.target;
         setFormData((prev) => ({
@@ -137,10 +154,10 @@ function Profile() {
                     error={validationErrors.avatar}
                 ></FormField>
 
-                {error && <p className='error-message'>{error}</p>}
-                {success && <p className='success-message'>{success}</p>}
+                {error && (<p className='error-message'>{error}</p>)}
+                {success && (<p className='success-message'>{success}</p>)}
 
-                <button type='submit' disabled={saving} >
+                <button type='submit' disabled={!hasChange || saving} >
                     {saving ? 'Saving...' : "Save Changes"}
                 </button>
             </form>
