@@ -26,7 +26,7 @@ function Profile() {
 
                 setFormData({
                     name: user.name || '',
-                    avatar: user.avatar
+                    avatar: user.avatar || ''
                 })
             } catch (error) {
                 setError(error.message);
@@ -37,7 +37,7 @@ function Profile() {
         fetchProfile();
     }, [])
 
-    const hasChange = profile && (
+    const hasChanges = profile && (
         formData.name.trim() !== (profile.name || '') ||
         formData.avatar.trim() !== (profile.avatar || '')
     )
@@ -59,7 +59,7 @@ function Profile() {
         if (Object.keys(errors).length > 0) {
             return;
         }
-        if(!hasChange || saving){
+        if(!hasChanges || saving){
             return
         }
     // Step 3: Call API only when validation passes
@@ -99,14 +99,22 @@ function Profile() {
         setSuccess('');
     }
 
+    function handleCancel() {
+        setFormData({
+            name: profile.name || '',
+            avatar: profile.avatar || ''
+        })
+        setValidationErrors({});
+        setError();
+        setSuccess()
+    }
+
     if (loading) {
         return <p>Profile loading....</p>
     }
-
     // if (error) {
     //     return <p>{error}</p>
     // }
-
     if (!profile) {
         return <p>Profile not found.</p>
     }
@@ -156,10 +164,14 @@ function Profile() {
 
                 {error && (<p className='error-message'>{error}</p>)}
                 {success && (<p className='success-message'>{success}</p>)}
+                <div className="form-actions">
+                    <button type='submit' disabled={!hasChanges || saving} >
+                        {saving ? 'Saving...' : "Save Changes"}
+                    </button>
 
-                <button type='submit' disabled={!hasChange || saving} >
-                    {saving ? 'Saving...' : "Save Changes"}
-                </button>
+                    {hasChanges && (<button type="button" disabled={ saving }
+                        onClick={handleCancel}>Cancel Changes</button>)}
+                </div>
             </form>
 
             <div className="profile-card">
