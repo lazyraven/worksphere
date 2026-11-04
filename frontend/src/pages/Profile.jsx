@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { apiRequest } from '../services/api.js'
-import FormField from '../components/forms/FormField.jsx'
+import { apiRequest } from '../services/api.js';
+import FormField from '../components/forms/FormField.jsx';
+import { validateProfile } from '../utils/validateprofile.js';
 
 function Profile() {
     const [profile, setProfile] = useState(null);
@@ -8,6 +9,8 @@ function Profile() {
         name: '',
         avatar: ''
     })
+    const [validationErrors, setValidationErrors] = useState({});
+
     const [saving, setSaving] = useState(false);
     const [success, setSuccess] = useState('');
 
@@ -36,9 +39,15 @@ function Profile() {
 
     async function handleSubmit(event) {
         event.preventDefault();
+        const errors = validateProfile(formData);
+        setValidationErrors(errors);
+
         setSaving(true);
         setError('');
         setSuccess('');
+        if (Object.keys(errors).length > 0) {
+            return;
+        }
         try {
             const response = await apiRequest('/profile/me', {
                 method: 'PATCH',
@@ -65,15 +74,21 @@ function Profile() {
             ...prev,
             [name]: value
         }))
+        setValidationErrors((prev) => ({
+            ...prev,
+            [name]: ''
+        }))
+        setError('');
+        setSuccess('');
     }
 
     if (loading) {
         return <p>Profile loading....</p>
     }
 
-    if (error) {
-        return <p>{error}</p>
-    }
+    // if (error) {
+    //     return <p>{error}</p>
+    // }
 
     if (!profile) {
         return <p>Profile not found.</p>
@@ -92,6 +107,7 @@ function Profile() {
                     onChange={handleChange}
                     placeholder="Enter your full name"
                     required
+                    error={validationErrors.name}
                 ></FormField>
 
                 <FormField
@@ -118,6 +134,7 @@ function Profile() {
                     value={formData.avatar}
                     onChange={handleChange}
                     placeholder="Enter avatar URL"
+                    error={validationErrors.avatar}
                 ></FormField>
 
                 {error && <p className='error-message'>{error}</p>}
@@ -126,7 +143,6 @@ function Profile() {
                 <button type='submit' disabled={saving} >
                     {saving ? 'Saving...' : "Save Changes"}
                 </button>
-
             </form>
 
             <div className="profile-card">
