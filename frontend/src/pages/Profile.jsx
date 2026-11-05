@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { apiRequest } from '../services/api.js'
-import FormField from '../components/forms/FormField.jsx'
+import { apiRequest } from '../services/api.js';
+import FormField from '../components/forms/FormField.jsx';
+import { validateProfile } from '../utils/profileValidation';
 
 function Profile() {
     const [profile, setProfile] = useState(null);
@@ -8,6 +9,8 @@ function Profile() {
         name: '',
         avatar: ''
     })
+    const [validationErrors, setValidationErrors] = useState({});
+
     const [saving, setSaving] = useState(false);
     const [success, setSuccess] = useState('');
 
@@ -23,7 +26,7 @@ function Profile() {
 
                 setFormData({
                     name: user.name || '',
-                    avatar: user.avatar
+                    avatar: user.avatar || ''
                 })
             } catch (error) {
                 setError(error.message);
@@ -34,15 +37,37 @@ function Profile() {
         fetchProfile();
     }, [])
 
+    const hasChanges = profile && (
+        formData.name.trim() !== (profile.name || '') ||
+        formData.avatar.trim() !== (profile.avatar || '')
+    )
+
     async function handleSubmit(event) {
         event.preventDefault();
-        setSaving(true);
+
+    // Step 1: Validate before API request
+        const payload = {
+            name: formData.name.trim(),
+            avatar: formData.avatar.trim()
+        }
+        const errors = validateProfile(payload);
+        setValidationErrors(errors);
         setError('');
         setSuccess('');
+
+    // Step 2: Stop if validation fails
+        if (Object.keys(errors).length > 0) {
+            return;
+        }
+        if(!hasChanges || saving){
+            return
+        }
+    // Step 3: Call API only when validation passes
+        setSaving(true);
         try {
             const response = await apiRequest('/profile/me', {
                 method: 'PATCH',
-                body: JSON.stringify(formData)
+                body: JSON.stringify(payload)
             });
 
             const updatedUser = response.data.user;
@@ -51,6 +76,7 @@ function Profile() {
                 name: updatedUser.name || '',
                 avatar: updatedUser.avatar || ''
             })
+        setValidationErrors({});
 
             setSuccess('Profile updated successfully!');
         } catch (error) {
@@ -59,22 +85,37 @@ function Profile() {
             setSaving(false);
         }
     }
+
     const handleChange = (event) => {
         const { name, value } = event.target;
         setFormData((prev) => ({
             ...prev,
             [name]: value
         }))
+        setValidationErrors((prev) => ({
+            ...prev,
+            [name]: ''
+        }))
+        setError('');
+        setSuccess('');
+    }
+
+    function handleCancel() {
+        setFormData({
+            name: profile.name || '',
+            avatar: profile.avatar || ''
+        })
+        setValidationErrors({});
+        setError();
+        setSuccess()
     }
 
     if (loading) {
         return <p>Profile loading....</p>
     }
-
-    if (error) {
-        return <p>{error}</p>
-    }
-
+    // if (error) {
+    //     return <p>{error}</p>
+    // }
     if (!profile) {
         return <p>Profile not found.</p>
     }
@@ -92,6 +133,7 @@ function Profile() {
                     onChange={handleChange}
                     placeholder="Enter your full name"
                     required
+                    error={validationErrors.name}
                 ></FormField>
 
                 <FormField
@@ -118,15 +160,19 @@ function Profile() {
                     value={formData.avatar}
                     onChange={handleChange}
                     placeholder="Enter avatar URL"
+                    error={validationErrors.avatar}
                 ></FormField>
 
-                {error && <p className='error-message'>{error}</p>}
-                {success && <p className='success-message'>{success}</p>}
+                {error && (<p className='error-message'>{error}</p>)}
+                {success && (<p className='success-message'>{success}</p>)}
+                <div className="form-actions">
+                    <button type='submit' disabled={!hasChanges || saving} >
+                        {saving ? 'Saving...' : "Save Changes"}
+                    </button>
 
-                <button type='submit' disabled={saving} >
-                    {saving ? 'Saving...' : "Save Changes"}
-                </button>
-
+                    {hasChanges && (<button type="button" disabled={ saving }
+                        onClick={handleCancel}>Cancel Changes</button>)}
+                </div>
             </form>
 
             <div className="profile-card">
