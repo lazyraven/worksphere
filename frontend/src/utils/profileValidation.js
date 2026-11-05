@@ -1,4 +1,6 @@
-export async function validateProfile(formData) {
+export function validateProfile(formData) {
+    console.log("validateProfile called");
+    
     const name = formData.name.trim();
     const errors = {};
 
@@ -6,7 +8,7 @@ export async function validateProfile(formData) {
         errors.name = 'Full Name is required';
     } else if (name.length < 2) {
         errors.name = 'Name must contain at least 2 characters';
-    } else if (name.length < 50) {
+    } else if (name.length > 50) {
         errors.name = 'Name cannot exceed 50 characters';
     }
 
@@ -14,11 +16,14 @@ export async function validateProfile(formData) {
     if (avatar) {
         try {
             const url = new URL(avatar)
-            if (!['http', 'https'].includes(url.protocol)) {
+            if (!['http:', 'https:'].includes(url.protocol)) {
                 errors.avatar = 'Avatar URL must use HTTP or HTTPS'
             }
         } catch {
             errors.name = 'Please enter a valid avatar URL'
         }
     }
+    console.log("errors", errors);
+    
+    return errors;
 }

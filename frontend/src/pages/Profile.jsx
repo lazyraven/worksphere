@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { apiRequest } from '../services/api.js';
 import FormField from '../components/forms/FormField.jsx';
-import { validateProfile } from '../utils/validateprofile.js';
+import { validateProfile } from '../utils/profileValidation';
 
 function Profile() {
     const [profile, setProfile] = useState(null);
@@ -67,7 +67,7 @@ function Profile() {
         try {
             const response = await apiRequest('/profile/me', {
                 method: 'PATCH',
-                body: JSON.stringify(formData)
+                body: JSON.stringify(payload)
             });
 
             const updatedUser = response.data.user;
@@ -76,6 +76,7 @@ function Profile() {
                 name: updatedUser.name || '',
                 avatar: updatedUser.avatar || ''
             })
+        setValidationErrors({});
 
             setSuccess('Profile updated successfully!');
         } catch (error) {
