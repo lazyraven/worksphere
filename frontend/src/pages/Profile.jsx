@@ -161,7 +161,7 @@ function Profile() {
                     onChange={handleChange}
                     placeholder="Enter avatar URL"
                     error={validationErrors.avatar}
-                ></FormField>
+                />
 
                 {error && (<p className='error-message'>{error}</p>)}
                 {success && (<p className='success-message'>{success}</p>)}

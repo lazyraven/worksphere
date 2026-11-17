@@ -20,7 +20,7 @@ export function validateProfile(formData) {
                 errors.avatar = 'Avatar URL must use HTTP or HTTPS'
             }
         } catch {
-            errors.name = 'Please enter a valid avatar URL'
+            errors.avatar = 'Please enter a valid avatar URL'
         }
     }
     console.log("errors", errors);
