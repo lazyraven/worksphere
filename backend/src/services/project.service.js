@@ -28,7 +28,7 @@ export const getAllProject = async (userId) => {
     return projects;
 }
 
-export const getProjectById = async (projectId, userId){
+export const getProjectById = async (projectId, userId) => {
 
     // Validate MongoDB ObjectId
     if (!mongoose.isValidObjectId(projectId)) {
