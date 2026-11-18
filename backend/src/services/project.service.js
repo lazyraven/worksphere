@@ -13,6 +13,16 @@ export const createProject = async (userId, projectData)=>{
     return project;
 }
 
-export function getProject(userId) {
+export const getAllProject = async (userId)=> {
+    const projects = await Project.find({
+        $or: [
+            { owner: userId },
+            { members: userId }
+        ]
+    })
+    .populate('owner' , 'name email avatar')
+    .populate('members', 'name email avatar')
+    .sort({createdAt: -1})
 
+    return projects;
 }
