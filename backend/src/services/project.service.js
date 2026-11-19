@@ -75,6 +75,24 @@ export const updateProject = async (projectId, userId, updates) => {
     }
     // Save and run Mongoose validation
     await project.save();
-    
+
     return project;
+}
+
+export const deleteProject = async (projectId, userId)=>{
+ // Validate MongoDB ObjectId
+    if(!mongoose.isValidObjectId(projectId)){
+    throw new error('projectId is invalid');
+}
+
+ // Delete only if the authenticated user is the owner
+const project = await Project.findByIdAndUpdate({
+    _id: projectId,
+    owner: userId
+})
+if(!project){
+    throw new error('Project not found or you are not authorized')
+}
+
+return project;
 }
