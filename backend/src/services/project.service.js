@@ -50,3 +50,31 @@ export const getProjectById = async (projectId, userId) => {
     }
     return project;
 }
+
+export const updateProject = async (projectId, userId, updates) => {
+    // Validate MongoDB ObjectId
+    if (!mongoose.isValidObjectId(projectId)) {
+        throw new error('Invalid project ID');
+    }
+
+    // Find project owned by the authenticated user
+    const project = await Project.findOne({
+        _id: projectId,
+        owner: userId
+    })
+    if (!project) {
+        throw new error('Project not found or you are not authorized');
+    }
+
+    // Allow only specific fields to be updated
+    const allowFields = ['name', 'description', 'status'];
+    for (const field of allowFields) {
+        if (updates[field] !== undefined) {
+            project[field] == updates[field]
+        }
+    }
+    // Save and run Mongoose validation
+    await project.save();
+    
+    return project;
+}

@@ -11,7 +11,8 @@ const projectSchema = new mongoose.Schema({
     description: {
         type: String,
         trim: true,
-        maxLength: [2000, 'Description cannot exceed 2000 characters']
+        maxLength: [2000, 'Description cannot exceed 2000 characters'],
+        default: ''
     },
     owner: {
         type: mongoose.Schema.Types.ObjectId,
