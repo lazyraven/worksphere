@@ -1,5 +1,5 @@
 import express from 'express';
-import { authenticate } from '../middleware/auth.middleware';
+import { authenticate } from '../middleware/auth.middleware.js';
 
 import {
     createProject,
@@ -7,9 +7,9 @@ import {
     getProjectById,
     updateProject,
     deleteProject
-} from '../controllers/project.controller';
+} from '../controllers/project.controller.js';
 
-const router = express.router();
+const router = express.Router();
 
 // Create a project
 router.post('/', authenticate, createProject);
