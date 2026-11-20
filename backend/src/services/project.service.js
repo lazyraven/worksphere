@@ -1,9 +1,9 @@
 import mongoose from 'mongoose'
-import Project from '../models/Project';
+import Project from '../models/Project.js';
 
 // Create a new project
 export const createProject = async (userId, projectData) => {
-    const [name, description, status] = projectData;
+    const {name, description, status} = projectData;
     const project = await Project.create({
         name,
         description,
@@ -93,6 +93,5 @@ const project = await Project.findByIdAndUpdate({
 if(!project){
     throw new error('Project not found or you are not authorized')
 }
-
 return project;
 }

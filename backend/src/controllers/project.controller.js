@@ -1,8 +1,8 @@
-import { createProject as createProjectService } from '../services/project.service';
-import { getAllProject as getAllProjectsService } from '../services/project.service';
-import { getProjectById as getProjectByIdService } from '../services/project.service';
-import { updateProject as updateProjectService } from '../services/project.service';
-import { deleteProject as deleteProjectService } from '../services/project.service';
+import { createProject as createProjectService } from '../services/project.service.js';
+import { getAllProject as getAllProjectsService } from '../services/project.service.js';
+import { getProjectById as getProjectByIdService } from '../services/project.service.js';
+import { updateProject as updateProjectService } from '../services/project.service.js';
+import { deleteProject as deleteProjectService } from '../services/project.service.js';
 
 export const createProject = async (req, res, next) => {
     try {
@@ -67,8 +67,8 @@ export const updateProject = async (req, res, next) => {
     }
 }
 
-export const deteleProject = async (req, res, next) => {
-    try {
+export const deleteProject = async (req, res, next) => {
+    try { 
         const { projectId } = req.params;
         const userId = req.userId;
 
