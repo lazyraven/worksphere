@@ -55,7 +55,7 @@ export const getProjectById = async (projectId, userId) => {
 export const updateProject = async (projectId, userId, updates) => {
     // Validate MongoDB ObjectId
     if (!mongoose.isValidObjectId(projectId)) {
-        throw new error('Invalid project ID');
+        throw new Error('Invalid project ID');
     }
 
     // Find project owned by the authenticated user
@@ -64,14 +64,14 @@ export const updateProject = async (projectId, userId, updates) => {
         owner: userId
     })
     if (!project) {
-        throw new error('Project not found or you are not authorized');
+        throw new Error('Project not found or you are not authorized');
     }
 
     // Allow only specific fields to be updated
     const allowFields = ['name', 'description', 'status'];
     for (const field of allowFields) {
         if (updates[field] !== undefined) {
-            project[field] == updates[field]
+            project[field] = updates[field]
         }
     }
     // Save and run Mongoose validation
@@ -83,7 +83,7 @@ export const updateProject = async (projectId, userId, updates) => {
 export const deleteProject = async (projectId, userId)=>{
  // Validate MongoDB ObjectId
     if(!mongoose.isValidObjectId(projectId)){
-    throw new error('projectId is invalid');
+    throw new Error('projectId is invalid');
 }
 
  // Delete only if the authenticated user is the owner
@@ -92,7 +92,7 @@ const project = await Project.findByIdAndUpdate({
     owner: userId
 })
 if(!project){
-    throw new error('Project not found or you are not authorized')
+    throw new Error('Project not found or you are not authorized')
 }
 return project;
 }
