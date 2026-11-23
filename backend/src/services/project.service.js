@@ -87,7 +87,7 @@ export const deleteProject = async (projectId, userId)=>{
 }
 
  // Delete only if the authenticated user is the owner
-const project = await Project.findByIdAndUpdate({
+const project = await Project.findOneAndDelete({
     _id: projectId,
     owner: userId
 })

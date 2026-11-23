@@ -24,6 +24,6 @@ router.get('/:projectId', authenticate, getProjectById);
 router.patch('/:projectId', authenticate, updateProject);
 
 // Delete a project
-router.post('/:projectId', authenticate, deleteProject);
+router.delete('/:projectId', authenticate, deleteProject);
 
 export default router;
