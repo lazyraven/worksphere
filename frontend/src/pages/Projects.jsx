@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom'
 import { apiRequest } from '../services/api';
 import ProjectCard from '../features/projects/component/ProjectCard'
+import CreateProjectModal from '../features/projects/component/CreateProjectModal';
 
 // const projects = [
 //     { id: 1, name: 'Worksphere Dashboard' },
@@ -16,6 +17,7 @@ const Projects = () => {
     const [projects, setProjects] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
 
     const fetchProjects = async () => {
         try {
@@ -58,7 +60,7 @@ const Projects = () => {
                         <h1>Projects</h1>
                         <p>Manage and track all your projects in one place.</p>
                     </div>
-                    <button type='button'>
+                    <button type='button' onClick={()=> setIsCreateModalOpen(true)}>
                         +Create Project
                     </button>
                 </div>
@@ -90,6 +92,7 @@ const Projects = () => {
                     {!loading && !error && projects.length > 0 && (<p>Total Projects: {projects.length} </p>)}
                 </div>
             </div>
+            <CreateProjectModal isOpen={isCreateModalOpen} onClose={()=>setIsCreateModalOpen(false)}/>
         </div>
     )
 }
