@@ -38,6 +38,10 @@ const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
         navigate('/')
     }
 
+    const handleProjectCreated = async () => {
+        await fetchProjects();
+    }
+
     useEffect(() => {
         fetchProjects();
     }, []);
@@ -92,7 +96,9 @@ const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
                     {!loading && !error && projects.length > 0 && (<p>Total Projects: {projects.length} </p>)}
                 </div>
             </div>
-            <CreateProjectModal isOpen={isCreateModalOpen} onClose={()=>setIsCreateModalOpen(false)}/>
+            <CreateProjectModal isOpen={isCreateModalOpen} onClose={()=>setIsCreateModalOpen(false)}
+                onProjectCreated={handleProjectCreated}
+                />
         </div>
     )
 }

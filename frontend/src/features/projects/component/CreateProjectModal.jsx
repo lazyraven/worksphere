@@ -1,21 +1,25 @@
 import { useState } from 'react'
 // import FormField from '../../../components/forms/FormField';
 import { validateProject } from '../../../utils/projectValidation';
+import {apiRequest} from '../../../services/api'
 import './project.css';
 
-const CreateProjectModal = ({ isOpen, onClose }) => {
+const CreateProjectModal = ({ isOpen, onClose, onProjectCreated }) => {
     const [formData, setFormData] = useState({
         name: '',
         description: '',
         status: 'planning'
     })
     const [errors, setErrors] = useState({});
+    const [apiError, setApiError] = useState('');
+    const [saving, setsaving] = useState(false);
+
     // Don't render the modal when it is closed.
     if (!isOpen) {
         return null;
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         const validationErrors = validateProject(formData);
         setErrors(validationErrors);
@@ -27,6 +31,35 @@ const CreateProjectModal = ({ isOpen, onClose }) => {
             name: formData.name.trim(),
             description: formData.description.trim(),
         });
+        try {
+            setsaving(true);
+            setApiError('');
+            const payload = {
+                name: formData.name.trim(),
+                description: formData.description.trim(),
+                status: formData.status,
+            }
+
+            const response = await apiRequest('/projects', {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            });
+
+            // Notify parent component
+            await onProjectCreated(response.data);
+            // Reset form after successful creation
+            setFormData({
+                name: '',
+                description: '',
+                status: 'planning'
+            })
+            setErrors({}),
+            onClose();
+        } catch (error) {
+            setApiError(error.message || 'Failed to create project')
+        } finally {
+            setsaving(false);
+        }
     }
 
     const handleChange = (event) => {
@@ -94,9 +127,13 @@ const CreateProjectModal = ({ isOpen, onClose }) => {
                         </div>
                     </div>
                     <div className="project-modal-footer">
-                        <button type="button" onClick={onClose}>Cancel</button>
-                        <button type='submit'> Create Project </button>
+                        <button type="button" onClick={onClose} disabled={saving}>
+                            Cancel</button>
+                        <button type='submit' disabled={saving}>
+                             {saving ? 'Creating....' : 'Create Project'} </button>
                     </div>
+
+                    {apiError && <p className='field-error' role='alert'>{apiError}</p>}
                 </form>
             </div>
         </div>
