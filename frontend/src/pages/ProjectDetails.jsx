@@ -26,16 +26,32 @@ function ProjectDetails() {
     }
 
     useEffect(() => {
-  fetchProject();
+        //for testing loading message - i used setTimeout
+        // setTimeout(()=>{
+        //     fetchProject();
+        // }, 1000)
+        fetchProject();
+
 }, [projectId]);
 
     if (loading) {
-        return <p>Loading project details....</p>
-    } if (error) {
-        return <p>{error}</p>
+        return (<div className="project-details-loading">
+            <p>Loading project details....</p>
+        </div>)
+    }
+    if (error) {
+        return (
+            <div className="project-details-error">
+                <h2>Unabled to Load project</h2>
+                <p>{error}</p>
+                {/*For test - to check this you can mistake in apirequest it'll display.. */}
+                <button onClick={fetchProject}>Try again</button>
+            </div>
+        )
     } if (!project) {
         return <p>Project not found.</p>
     }
+
     return (
         <div>
             <h1>Project Details</h1>
