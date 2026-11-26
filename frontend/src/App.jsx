@@ -29,6 +29,7 @@ function App() {
           <Route path='/analytics' element={<Projects />} />
           <Route path='/reports' element={<Reports />} />
           <Route path='/profile' element={<Profile />} />
+          <Route path='/projects/:projectId' element={<ProjectDetails />} />
         </Route>
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
@@ -36,7 +37,6 @@ function App() {
 
       <Route path='/' element={<Navigate to='/dashboard' replace />} />
       <Route path='*' element={<NotFound />} />
-      <Route path='/projects/:projectId' element={<ProjectDetails />} />
     </Routes>
 
   );

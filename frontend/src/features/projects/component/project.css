@@ -13,6 +13,20 @@
   border: 1px solid #e5e7eb;
   border-radius: 10px;
   background: #ffffff;
+  cursor: pointer;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+}
+
+.project-card:focus-visible {
+  outline: 2px solid #6366f1;
+  outline-offset: 3px;
 }
 
 .project-card-header {
@@ -152,3 +166,4 @@
   font-size: 13px;
   margin: 4px 0 0;
 }
+

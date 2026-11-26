@@ -1,4 +1,5 @@
 import './project.css';
+import {useNavigate} from 'react-router-dom';
 
 const statusStyles = {
     planning: 'status-planning',
@@ -15,8 +16,22 @@ const ProjectCard = (({ project }) => {
 
     const statusLabel = status ? status.replace('-', ' ') : 'Unknown';
 
+    const navigate = useNavigate();
+
+    const handleClickCard = ()=>{
+        navigate(`/projects/${project._id}`)
+    }
     return (
-        <article className="project-card">
+        <article className="project-card"
+        onClick={handleClickCard}
+        role='link'
+        tabIndex={0}
+        onKeyDown={(event)=>{
+            if(event.key === 'Enter'){
+                handleClickCard();
+            }
+        }}
+        >
             <div className="project-card-header">
                 <h3>Name: {name}</h3>
 
