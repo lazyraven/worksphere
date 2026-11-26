@@ -1,6 +1,8 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { apiRequest } from '../services/api';
+import ProjectOverview from '../features/projects/component/projectOverview.jsx';
+import ProjectMembers from '../features/projects/component/ProjectMembers.jsx';
 
 function ProjectDetails() {
     const { projectId } = useParams();
@@ -28,7 +30,7 @@ function ProjectDetails() {
 }, [projectId]);
 
     if (loading) {
-        return <p>Loading project details..</p>
+        return <p>Loading project details....</p>
     } if (error) {
         return <p>{error}</p>
     } if (!project) {
@@ -37,10 +39,7 @@ function ProjectDetails() {
     return (
         <div>
             <h1>Project Details</h1>
-
-            <p>
-                Project ID: {projectId}
-            </p>
+            <p>Project ID: {projectId}</p>
 
             <div className="project-details-page">
                 <h1>{project.name}</h1>
@@ -55,6 +54,11 @@ function ProjectDetails() {
                     {project.createdAt ? new Date(project.createdAt).toLocaleDateString() : 'unavailable'}
                 </p>
             </div>
+
+            <ProjectOverview project = {project}/>
+            <ProjectMembers members={project.member || []}
+            ownerId={project.owner?._id}
+            />
         </div>
     )
 
