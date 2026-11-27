@@ -9,6 +9,7 @@ function ProjectDetails() {
     const [project, setProject] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const isValidProjectId = /^[0-9a-fA-F]{24}$/.test(projectId);
 
     const fetchProject = async () => {
         try {
@@ -30,8 +31,13 @@ function ProjectDetails() {
         // setTimeout(()=>{
         //     fetchProject();
         // }, 1000)
-        fetchProject();
 
+        if(!isValidProjectId){
+            setError('Invalid project ID.');
+            setLoading(false);
+            return;
+        }
+        fetchProject();
 }, [projectId]);
 
     if (loading) {
@@ -39,16 +45,27 @@ function ProjectDetails() {
             <p>Loading project details....</p>
         </div>)
     }
+
+    if (!isValidProjectId) {
+        return <div className="project-details-error">
+            <h2>Invalid Project ID</h2>
+            <p>The project ID in the URL is not valid.</p>
+        </div>
+    }
     if (error) {
+        const isNotFound = error.toLowerCase().includes('not found');
         return (
             <div className="project-details-error">
-                <h2>Unabled to Load project</h2>
-                <p>{error}</p>
+                <h2>
+                    {isNotFound ? 'Project Not Found' : 'Unable to Load Project'}
+                </h2>
+                <p>{isNotFound ? "This project doesn't exist or you don't have access to it" : 'error'}</p>
                 {/*For test - to check this you can mistake in apirequest it'll display.. */}
-                <button onClick={fetchProject}>Try again</button>
+                {isNotFound && (<button onClick={fetchProject}>Try again</button>)}
             </div>
         )
-    } if (!project) {
+    }
+    if (!project) {
         return <p>Project not found.</p>
     }
 
@@ -72,7 +89,7 @@ function ProjectDetails() {
             </div>
 
             <ProjectOverview project = {project}/>
-            <ProjectMembers members={project.member || []}
+            <ProjectMembers members={project.members || []}
             ownerId={project.owner?._id}
             />
         </div>

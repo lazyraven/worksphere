@@ -10,7 +10,7 @@ export const createProject = async (userId, projectData) => {
         status,
         // owner: req.user.id // This should be assigned when creating the project. because project model uses(schema) - owner: req.user.id
         owner: userId,
-        member: [userId],
+        members: [userId],
     })
     return project;
 }
