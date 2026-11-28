@@ -3,6 +3,8 @@ import { useState, useEffect } from 'react';
 import { apiRequest } from '../services/api';
 import ProjectOverview from '../features/projects/component/projectOverview.jsx';
 import ProjectMembers from '../features/projects/component/ProjectMembers.jsx';
+import {useAuth} from '../hooks/useAuth.js';
+import EditProjectModal from '../features/projects/component/EditProjectModal.jsx';
 
 function ProjectDetails() {
     const { projectId } = useParams();
@@ -10,6 +12,8 @@ function ProjectDetails() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const isValidProjectId = /^[0-9a-fA-F]{24}$/.test(projectId);
+    const {user} = useAuth();
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
     const fetchProject = async () => {
         try {
@@ -68,7 +72,9 @@ function ProjectDetails() {
     if (!project) {
         return <p>Project not found.</p>
     }
-
+console.log("user", user)
+    const isOwner = user?.id === project?.owner?._id;
+    console.log("isOwner", isOwner)
     return (
         <div>
             <h1>Project Details</h1>
@@ -87,11 +93,31 @@ function ProjectDetails() {
                     {project.createdAt ? new Date(project.createdAt).toLocaleDateString() : 'unavailable'}
                 </p>
             </div>
+            {isOwner && (<div className="project-actions">
+                <button type='button' onClick={() =>setIsEditModalOpen(true)}>
+                    Edit Project 
+                </button>
+                <button className='delete-project-btn' type='button' onClick={() => console.log('Delete project')}>
+                    Delete Project
+                </button>
+            </div>)}
 
+           
             <ProjectOverview project = {project}/>
             <ProjectMembers members={project.members || []}
             ownerId={project.owner?._id}
             />
+
+             <EditProjectModal
+                isOpen={isEditModalOpen}
+                onClose={() => setIsEditModalOpen(false)}
+                project={project}
+                onProjectUpdated={(updatedProject) => {
+                    setProject(updatedProject);
+                    setIsEditModalOpen(false);
+                }}
+            />
+
         </div>
     )
 

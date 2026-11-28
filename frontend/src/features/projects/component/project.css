@@ -292,3 +292,22 @@
   color: white;
   cursor: pointer;
 }
+
+/* Edit-delete project */
+.project-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.project-actions button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.delete-project-btn {
+  background: #fee2e2;
+  color: #991b1b;
+}
